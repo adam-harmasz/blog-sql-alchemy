@@ -1,2 +1,2 @@
-# zdpytpol4
+# sql-alchemy db example
 learning purposes
