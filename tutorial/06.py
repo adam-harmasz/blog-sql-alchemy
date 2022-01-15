@@ -14,7 +14,7 @@ ich odpowiednikami w wierszach tabel
 
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
 from sqlalchemy import create_engine
-from sqlalchemy.orm import registry, relationship
+from sqlalchemy.orm import registry, relationship, declarative_base
 
 engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
 mapper_registry = registry()
@@ -51,4 +51,4 @@ class Address(Base):
 
 Base.metadata.create_all(engine)  # Tu tworzymy tabele
 
-print(User.__table__)
+print(User.__table__.c.keys())

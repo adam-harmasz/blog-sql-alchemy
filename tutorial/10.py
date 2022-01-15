@@ -2,7 +2,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, ins
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 mapper_registry = registry()
 Base = mapper_registry.generate_base()
 
@@ -61,18 +61,25 @@ adam = User(name="Adam", last_name="Driver")
 session.add(john)
 session.add(adam)
 
-print(adam.id)
-print(session.new)
-session.flush()
-print(adam.id)
+# print(adam.id)
+# print(john.id)
+# print(session.new)
+# # session.flush()
+# # q = session.query(User).all()
+# print(session.new)
+# print(adam.id)
 session.commit()
 
 adam.name = "Not Adam"
-print(session.dirty)
-
-session.commit()
+# print(session.dirty)
+#
+# session.commit()
+# print(session.dirty)
+print(session.query(User).where(User.name == "Not Adam").first())
+session.rollback()
 print(session.query(User).where(User.name == "Not Adam").first())
 
+print(session.dirty)
 session.execute(
     update(User).
     where(User.name == "Not Adam").

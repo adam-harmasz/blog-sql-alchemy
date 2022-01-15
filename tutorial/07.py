@@ -25,7 +25,7 @@ class User(Base):
     addresses = relationship("Address", back_populates="user")
 
     def __repr__(self):
-       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.name!r} {self.last_name})"
+       return f"User(id={self.id}, name={self.name}, fullname={self.name} {self.last_name})"
 
 
 class Address(Base):
@@ -44,7 +44,7 @@ class Address(Base):
 Base.metadata.create_all(engine)
 
 
-stmt = insert(User).values(name="Anthony", last_name="Hopkins")
+stmt = insert(User.__table__).values(name='Anthony', last_name="Hopkins")
 
 with engine.connect() as conn:
     conn.execute(stmt)
@@ -66,4 +66,4 @@ with Session(engine) as session:
 
     addresses = session.query(Address).all()
     for row in addresses:
-        print(f"id: {row.id}, email: {row.email_address}, user: {row.user}")
+        print(f"id: {row.id!r}, email: {row.email_address}, user: {row.user}")

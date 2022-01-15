@@ -14,10 +14,18 @@ user_table = Table(
     metadata_obj,
     Column('id', Integer, primary_key=True),
     Column('name', String(30)),
-    Column('fullname', String)
+    Column('fullname', String),
 )
 
-print(user_table.c.name)
-print(user_table.c.keys())
+addresses = Table(
+    "adresses",
+    metadata_obj,
+    Column('id', Integer, primary_key=True),
+    Column('email', String(30)),
+    Column('user', String),
+)
+
+print(dir(addresses))
+print(addresses.c.keys())
 
 metadata_obj.create_all(engine)

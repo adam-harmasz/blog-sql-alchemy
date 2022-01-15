@@ -1,7 +1,6 @@
 """
 WYBIERANIE REKORDÓW ZA POMOCĄ SELECT
 
-Tworzenie tabel i wpisy danych są z poprzedniego przykładu, następnie
 """
 
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, text, select
@@ -63,9 +62,9 @@ stmt = select(User.__table__).where(User.__table__.c.name == 'David')  # tutaj w
 # print("###")
 # print(stmt)
 
-with engine.connect() as conn:
-    for row in conn.execute(stmt):
-        print(row)
+# with engine.connect() as conn:
+#     for row in conn.execute(stmt):
+#         print(row)
 
 
 stmt = select(User).where(User.name == 'David')  # Tu możemy bezpośrednio dostać się do kolumn
@@ -73,6 +72,6 @@ with Session(engine) as session:
     for row in session.execute(stmt):
         print(row)
 
-    user = session.execute(select(User)).first()
+    user = session.execute(select(User))
     print(user)
 

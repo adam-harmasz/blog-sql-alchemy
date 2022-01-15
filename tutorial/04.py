@@ -5,7 +5,7 @@ Tworzymy tabelę jak we wcześniejszych przykłdach, jednak do uzyskania danych 
 from sqlalchemy import text, create_engine
 from sqlalchemy.orm import Session
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 
 # Używamy metody begin zamiast connection dzięki czemu na koniec bloku zmiany są komitowane w transakcji
 with engine.begin() as conn:

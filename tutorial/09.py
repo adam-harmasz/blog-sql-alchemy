@@ -60,7 +60,6 @@ with engine.connect() as conn:
 
 example = (
     update(User.__table__).where(User.__table__.c.name == 'David').values(last_name='Updated!')
-
 )
 print(example)
 
