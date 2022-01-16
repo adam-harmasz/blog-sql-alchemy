@@ -22,21 +22,23 @@ class BlogPost(Base):
     headline = Column(String(255), nullable=False)
     body = Column(Text)
 
+    author_id = Column(Integer, ForeignKey("author.id"))
+
     keywords = relationship(
         "Keyword",
         secondary=post_keywords,
         back_populates="posts",
     )
-    comments = relationship("Comment", back_populates="post")
+    author = relationship("Author", back_populates="posts")
 
     def __init__(self, headline, body, author):
-        self.author = author
         self.headline = headline
         self.body = body
+        self.author = author
 
     def __repr__(self):
         return (
-            f"BlogPost(id: {self.id}, headline: {self.headline}, author: {self.author})"
+            f"BlogPost(id: {self.id}, headline: {self.headline})"
         )
 
 
@@ -59,4 +61,29 @@ class Keyword(Base):
         return f"Keyword(id: {self.id}, keyword: {self.keyword})"
 
 
+class Author(Base):
+    __tablename__ = "author"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+
+    posts = relationship(BlogPost, back_populates="author")
+
+    def __repr__(self):
+        return f"Author(id: {self.id}, name: {self.name})"
+
+
 Base.metadata.create_all(engine)
+
+author1 = Author(name="Adam", last_name="Mickiewicz")
+post1 = BlogPost(headline="This is headline", body="My first post!", author=author1)
+keyword = Keyword(keyword="Earth")
+keyword.posts.append(post1)
+
+with Session(engine) as session:
+    session.add_all([post1, keyword, author1])
+    session.commit()
+    print(post1.keywords)
+    print(keyword.posts)
+    print(post1.author)
