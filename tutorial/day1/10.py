@@ -16,10 +16,10 @@ class User(Base):
     name = Column(String(30))
     last_name = Column(String)
 
-    addresses = relationship("Address", back_populates="user")
+    addresses = relationship("Address", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
-       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.name!r} {self.last_name})"
+       return f"User(id={self.id}, name={self.name}, fullname={self.name} {self.last_name})"
 
 
 class Address(Base):
@@ -74,20 +74,22 @@ adam.name = "Not Adam"
 # print(session.dirty)
 #
 # session.commit()
-# print(session.dirty)
+session.flush()
 print(session.query(User).where(User.name == "Not Adam").first())
 session.rollback()
-print(session.query(User).where(User.name == "Not Adam").first())
-
-print(session.dirty)
-session.execute(
-    update(User).
-    where(User.name == "Not Adam").
-    values(name="Adam")
-)
-session.commit()
 print(session.query(User).where(User.name == "Adam").first())
 
-session.delete(adam)
+# tu skończyliśmy
+
+session.execute(
+    update(User).
+    where(User.name == "Adam").
+    values(name="AdamHasChanged")
+)
 session.commit()
-print(session.query(User).all())
+print(session.query(User).where(User.name == "AdamHasChanged").first())
+anthony = session.execute(select(User).where(User.id == 1)).scalar_one()
+session.delete(anthony)
+session.commit()
+print(session.query(User).where(User.name == "AdamHasChanged").first() is None)
+print(session.query(Address).all())
