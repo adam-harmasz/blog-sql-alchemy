@@ -52,6 +52,7 @@ with engine.connect() as conn:
         insert(User),
         [{"name": "David", "last_name": "Fincher"}, {"name": "David", "last_name": "Lynch"}],
     )
+
     select_stmt = select(User.__table__.c.id, User.__table__.c.name + "@aol.com")
     insert_stmt = insert(Address.__table__).from_select(["user_id", "email_address"], select_stmt)
 

@@ -65,9 +65,10 @@ print(example)
 
 stmt = (
   update(User.__table__).
-  where(User.__table__.c.name == bindparam('oldname')).
-  values(name=bindparam('newname'))
+  where(User.__table__.c.name == bindparam('newname')).
+  values(name=bindparam('oldname'))
 )
+print(stmt)
 with engine.begin() as conn:
     conn.execute(
             stmt,

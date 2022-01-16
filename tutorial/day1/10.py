@@ -64,14 +64,14 @@ session.add(adam)
 # print(adam.id)
 # print(john.id)
 # print(session.new)
-# # session.flush()
-# # q = session.query(User).all()
+# session.flush()
+q = session.query(User).all()
 # print(session.new)
-# print(adam.id)
+print(adam.id)
 session.commit()
 
 adam.name = "Not Adam"
-# print(session.dirty)
+print(session.dirty)
 #
 # session.commit()
 session.flush()
@@ -82,14 +82,15 @@ print(session.query(User).where(User.name == "Adam").first())
 # tu skończyliśmy
 
 session.execute(
-    update(User).
-    where(User.name == "Adam").
-    values(name="AdamHasChanged")
+    update(User).where(User.name == "Adam").values(name="AdamHasChanged")
 )
 session.commit()
-print(session.query(User).where(User.name == "AdamHasChanged").first())
+
+print(session.query(User).where(User.id == 5).scalar())
+
 anthony = session.execute(select(User).where(User.id == 1)).scalar_one()
+print(anthony.addresses)
 session.delete(anthony)
 session.commit()
-print(session.query(User).where(User.name == "AdamHasChanged").first() is None)
+# print(session.query(User).where(User.name == "AdamHasChanged").first() is None)
 print(session.query(Address).all())

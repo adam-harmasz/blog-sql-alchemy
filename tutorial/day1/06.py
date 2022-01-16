@@ -43,7 +43,7 @@ class Address(Base):
     email_address = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey('user_account.id'))  # Tutaj definiujemy relację z tabelą user_account
 
-    user = relationship("User", back_populates="addresses")
+    user = relationship(User, back_populates="addresses")
 
     def __repr__(self):
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
@@ -52,3 +52,5 @@ class Address(Base):
 Base.metadata.create_all(engine)  # Tu tworzymy tabele
 
 print(User.__table__.c.keys())
+
+

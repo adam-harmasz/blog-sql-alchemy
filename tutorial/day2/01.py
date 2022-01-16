@@ -6,7 +6,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, ins
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session, declarative_base, aliased
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
 
 Base = declarative_base()
 
@@ -57,25 +57,25 @@ session = Session(engine)
 # Select all users and sort them by id in ascending order
 # for user in session.query(User).order_by(User.id):
 #     print(user)
-
+# print("###")
 # for user in session.execute(select(User).order_by(User.id)).scalars().all():
 #     print(user)
 
-#
-# # Select all users and sort them by id in descending order
+
+# Select all users and sort them by id in descending order
 # for user in session.query(User).order_by(User.id.desc()):
 #     print(user)
 #
 # for user in session.execute(select(User).order_by(User.id.desc())).scalars().all():
 #     print(user)
 
-# # Select user with id = 1
+# Select user with id = 1
 # for user in session.query(User).filter(User.id==1):
 #     print(user)
 
 # print(session.execute(select(User).filter(User.id == 1)).one())
-
-
+#
+#
 # # Another way to select a user with id = 1
 # for user in session.query(User).filter_by(id=1):
 #     print(user)
@@ -110,6 +110,9 @@ session = Session(engine)
 # for row in session.execute(select(User.name, func.count(User.id)).group_by(User)).all():
 #     print(row)
 
+# for row in session.execute(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.all():
+#     print(row)
+
 
 # LABELE, ALIASY
 # stmt = select(
@@ -118,14 +121,14 @@ session = Session(engine)
 #         group_by("user_id").order_by(desc("num_addresses"))
 # print(session.execute(stmt).all())
 #
-# # Przykład użycia aliasóœ
+# # # Przykład użycia aliasóœ
 # user_alias_1 = User.__table__.alias()
 # user_alias_2 = User.__table__.alias()
 # print(
 #     session.execute(select(user_alias_1.c.id, user_alias_2.c.id).
 #     join_from(user_alias_1, user_alias_2, user_alias_1.c.id > user_alias_2.c.id)).all()
 # )
-#
+
 # user_alias_1 = aliased(User)
 # user_alias_2 = aliased(User)
 # print(
@@ -133,14 +136,14 @@ session = Session(engine)
 #     join_from(user_alias_1, user_alias_2, user_alias_1.id > user_alias_2.id)).all()
 # )
 #
-# address_alias_1 = aliased(Address)
-# address_alias_2 = aliased(Address)
-# stmt = (
-#     select(User).
-#     join_from(User, address_alias_1).
-#     where(address_alias_1.email_address == 'sergio@yahoo.com').
-#     join_from(User, address_alias_2).
-#     where(address_alias_2.email_address == 'sergio@gmail.com')
-# )
-#
-# print(session.execute(stmt).all())
+address_alias_1 = aliased(Address)
+address_alias_2 = aliased(Address)
+stmt = (
+    select(User).
+    join_from(User, address_alias_1).
+    where(address_alias_1.email_address == 'sergio@yahoo.com').
+    join_from(User, address_alias_2).
+    where(address_alias_2.email_address == 'sergio@gmail.com')
+)
+
+print(session.execute(stmt).all())

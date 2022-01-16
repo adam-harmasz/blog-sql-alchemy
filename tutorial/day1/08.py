@@ -58,20 +58,20 @@ with engine.connect() as conn:
     conn.commit()
 
 
-stmt = select(User.__table__).where(User.__table__.c.name == 'David')  # tutaj wykorzystujemy obiekt Table i atrybut c dzięki któremu możemy dostać się do kolumn
+# stmt = select(User.__table__).where(User.__table__.c.name == 'David')  # tutaj wykorzystujemy obiekt Table i atrybut c dzięki któremu możemy dostać się do kolumn
 # print("###")
 # print(stmt)
 
-# with engine.connect() as conn:
-#     for row in conn.execute(stmt):
-#         print(row)
+with engine.connect() as conn:
+    for row in conn.execute(stmt):
+        print(row)
 
 
 stmt = select(User).where(User.name == 'David')  # Tu możemy bezpośrednio dostać się do kolumn
+
 with Session(engine) as session:
     for row in session.execute(stmt):
         print(row)
 
     user = session.execute(select(User))
     print(user)
-

@@ -22,7 +22,6 @@ class BlogPost(Base):
     headline = Column(String(255), nullable=False)
     body = Column(Text)
 
-    reactions = relationship('Reaction', back_populates='post')
     keywords = relationship(
         "Keyword",
         secondary=post_keywords,
