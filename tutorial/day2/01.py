@@ -121,7 +121,7 @@ session = Session(engine)
 #         group_by("user_id").order_by(desc("num_addresses"))
 # print(session.execute(stmt).all())
 #
-# # # Przykład użycia aliasóœ
+# # # Przykład użycia aliasów
 # user_alias_1 = User.__table__.alias()
 # user_alias_2 = User.__table__.alias()
 # print(

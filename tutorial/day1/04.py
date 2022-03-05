@@ -3,7 +3,6 @@ Tworzymy tabelę jak we wcześniejszych przykłdach, jednak do uzyskania danych 
 """
 
 from sqlalchemy import text, create_engine
-from sqlalchemy.orm import Session
 
 engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 
@@ -21,19 +20,18 @@ with engine.begin() as conn:
 
 
 stmt = text("SELECT id, name, last_name FROM Users WHERE id > :y ORDER BY name").bindparams(y=1)
-with Session(engine) as session:
-    result = session.execute(stmt)
+with engine.connect() as conn:
+    result = conn.execute(stmt)
     for row in result:
         print(f"id: {row.id}, name: {row.name}, last_name: {row.last_name}")
 
 
-with Session(engine) as session:
-    result = session.execute(
-        text("UPDATE Users SET name=:name WHERE last_name=:last_name"),
-        [{"name": "Adrian", "last_name": "Fincher"}, {"name": "John", "last_name": "Lynch"}]
-    )
-    session.commit()
-
-    result = session.execute(text("SELECT * FROM Users")).all()
-    for row in result:
-        print(f"id: {row.id}, name: {row.name}, last_name: {row.last_name}")
+# with engine.connect() as conn:
+#     conn.execute(
+#         text("UPDATE Users SET name=:name WHERE last_name=:last_name"),
+#         [{"name": "Adrian", "last_name": "Fincher"}, {"name": "John", "last_name": "Lynch"}]
+#     )
+#
+#     result = conn.execute(text("SELECT * FROM Users")).all()
+#     for row in result:
+#         print(f"id: {row.id}, name: {row.name}, last_name: {row.last_name}")

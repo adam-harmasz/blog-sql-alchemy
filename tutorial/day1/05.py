@@ -25,7 +25,7 @@ addresses = Table(
     Column('user', String),
 )
 
-print(dir(addresses))
-print(addresses.c.keys())
+# print(dir(addresses))
+# print(addresses.c.keys())
 
 metadata_obj.create_all(engine)
