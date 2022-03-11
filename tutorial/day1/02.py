@@ -18,7 +18,7 @@ Ważne! Wywołanie funkcji create_engine nie powoduje nawiązania połączenia z
 
 from sqlalchemy import create_engine, text
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 
 with engine.connect() as conn:
     conn.execute(text("CREATE TABLE Users(id integer primary key autoincrement, name varchar, last_name varchar)"))
@@ -26,8 +26,9 @@ with engine.connect() as conn:
         text("INSERT INTO Users (name, last_name) VALUES (:name, :last_name)"),
         [{"name": "David", "last_name": "Fincher"}, {"name": "David", "last_name": "Lynch"}]
     )
-
+    #
     conn.commit()  # Tutaj commitujemy zmiany do bazy danych
     result = conn.execute(text("SELECT * FROM Users")).all()
+    print(result)
     for row in result:
         print(f"name: {row.name}, last_name: {row.last_name}")

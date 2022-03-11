@@ -8,7 +8,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, ins
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 mapper_registry = registry()
 Base = mapper_registry.generate_base()
 
@@ -58,26 +58,31 @@ with engine.connect() as conn:
     conn.execute(insert_stmt)
     conn.commit()
 
-example = (
-    update(User.__table__).where(User.__table__.c.name == 'David').values(last_name='Updated!')
-)
-print(example)
+# example = (
+#     update(User.__table__).where(User.__table__.c.name == 'David').values(last_name='Updated!')
+# )
+# print(example)
+
+
 
 stmt = (
   update(User.__table__).
-  where(User.__table__.c.name == bindparam('newname')).
-  values(name=bindparam('oldname'))
+  where(User.__table__.c.name == bindparam('oldname')).
+  values(name=bindparam('newname'))
 )
-print(stmt)
-with engine.begin() as conn:
+# # print(stmt)
+with engine.connect() as conn:
     conn.execute(
             stmt,
             [
-                 {'oldname':'David', 'newname':'ed'},
-                 {'oldname':'David', 'newname':'mary'},
-                 {'oldname':'Anthony', 'newname':'jake'},
+                 {'oldname': 'David', 'newname': 'ed'},
+                 {'oldname': 'David', 'newname': 'mary'},
+                 {'oldname': 'Anthony', 'newname': 'jake'},
             ]
         )
+    conn.commit()
+    # for row in conn.execute(select(User)).all():
+    #     print(row)
 
 with Session(engine) as session:
     for row in session.query(User).all():

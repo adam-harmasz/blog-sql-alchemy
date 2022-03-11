@@ -61,36 +61,34 @@ adam = User(name="Adam", last_name="Driver")
 session.add(john)
 session.add(adam)
 
-# print(adam.id)
-# print(john.id)
-# print(session.new)
-# session.flush()
-q = session.query(User).all()
-# print(session.new)
-print(adam.id)
 session.commit()
 
-adam.name = "Not Adam"
-print(session.dirty)
+# adam.name = "Not Adam"
+# print(session.dirty)
 #
+# session.flush()
+# # print(session.dirty)
+# print(session.query(User).where(User.name == "Not Adam").first())
 # session.commit()
-session.flush()
-print(session.query(User).where(User.name == "Not Adam").first())
-session.rollback()
-print(session.query(User).where(User.name == "Adam").first())
+# session.rollback()
+# print(session.query(User).where(User.name == "Not Adam").first())
 
-# tu skończyliśmy
-
-session.execute(
-    update(User).where(User.name == "Adam").values(name="AdamHasChanged")
-)
-session.commit()
-
-print(session.query(User).where(User.id == 5).scalar())
-
+# print(session.query(User).where(User.name == "Adam").first())
+#
+# session.execute(
+#     update(User).where(User.name == "Adam").values(name="AdamHasChanged")
+# )
+# session.commit()
+#
+# print(session.query(User).where(User.id == 5).scalar())
+#
 anthony = session.execute(select(User).where(User.id == 1)).scalar_one()
+print(anthony)
+#
 print(anthony.addresses)
 session.delete(anthony)
+#
 session.commit()
-# print(session.query(User).where(User.name == "AdamHasChanged").first() is None)
+# # print(session.query(User).where(User.name == "AdamHasChanged").first() is None)
+print(session.query(User).all())
 print(session.query(Address).all())

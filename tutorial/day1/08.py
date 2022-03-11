@@ -7,7 +7,7 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, ins
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 mapper_registry = registry()
 Base = mapper_registry.generate_base()
 
@@ -58,7 +58,7 @@ with engine.connect() as conn:
     conn.commit()
 
 
-# stmt = select(User.__table__).where(User.__table__.c.name == 'David')  # tutaj wykorzystujemy obiekt Table i atrybut c dzięki któremu możemy dostać się do kolumn
+stmt = select(User.__table__).where(User.__table__.c.name == 'David')  # tutaj wykorzystujemy obiekt Table i atrybut c dzięki któremu możemy dostać się do kolumn
 # print("###")
 # print(stmt)
 
@@ -73,5 +73,5 @@ with Session(engine) as session:
     for row in session.execute(stmt):
         print(row)
 
-    user = session.execute(select(User))
-    print(user)
+    # user = session.execute(select(User))
+    # print(user)

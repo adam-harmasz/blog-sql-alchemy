@@ -12,15 +12,15 @@ Zadania ORM:
 ich odpowiednikami w wierszach tabel
 """
 
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, select
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, declarative_base
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
-mapper_registry = registry()
-Base = mapper_registry.generate_base()
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
+# mapper_registry = registry()
+# Base = mapper_registry.generate_base()
 
-# Base = declarative_base()  # to jest równoważne do tworzenia Base z mapper_registry
+Base = declarative_base()  # to jest równoważne do tworzenia Base z mapper_registry
 
 
 class User(Base):
@@ -49,8 +49,24 @@ class Address(Base):
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
 
 
-Base.metadata.create_all(engine)  # Tu tworzymy tabele
+# Tu tworzymy tabele
+Base.metadata.create_all(engine)
 
-print(User.__table__.c.keys())
+with engine.connect() as conn:
+    conn.execute(
+        insert(User),
+        [{"name": "David", "fullname": "Fincher"}, {"name": "David", "fullname": "Lynch"}],
+    )
+    conn.execute(insert(Address).values(email_address="asd@asd.pl", user_id=1))
+    conn.execute(insert(Address).values(email_address="email@email.pl", user_id=1))
+    conn.commit()
+
+    result = conn.execute(select(User).where(User.id==1)).one()
+    # for user in result:
+    #     print(user)
+    print(result)
 
 
+
+# print(User.__table__)
+# print(User.__table__.c.keys())

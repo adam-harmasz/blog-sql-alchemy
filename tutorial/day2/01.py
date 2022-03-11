@@ -2,11 +2,10 @@
 ORM DATA MANIPULATION
 """
 
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, text, select, update, bindparam, func, desc
-from sqlalchemy import create_engine
-from sqlalchemy.orm import registry, relationship, Session, declarative_base, aliased
+from sqlalchemy import Column, Integer, String, ForeignKey, select, func, create_engine
+from sqlalchemy.orm import relationship, Session, declarative_base
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 
 Base = declarative_base()
 
@@ -49,15 +48,20 @@ def populate_db(users: list[User]) -> None:
     with Session(engine) as session:
         session.add_all(users)
         session.commit()
+        # new_roberts_address = Address(email_address="new_addres@gmail.com", user_id=robert.id)
+        # session.add(new_roberts_address)
+        robert.addresses.append(Address(email_address="new_address@gmail.com", user_id=robert.id))
+        session.commit()
 
 
 populate_db([adam, david, sergio, robert])
+
 session = Session(engine)
 
 # Select all users and sort them by id in ascending order
-# for user in session.query(User).order_by(User.id):
+# for user in session.query(User).order_by(User.name):
 #     print(user)
-# print("###")
+print("###")
 # for user in session.execute(select(User).order_by(User.id)).scalars().all():
 #     print(user)
 
@@ -65,21 +69,21 @@ session = Session(engine)
 # Select all users and sort them by id in descending order
 # for user in session.query(User).order_by(User.id.desc()):
 #     print(user)
-#
+
 # for user in session.execute(select(User).order_by(User.id.desc())).scalars().all():
 #     print(user)
 
 # Select user with id = 1
-# for user in session.query(User).filter(User.id==1):
+# for user in session.query(User).filter(User.id == 1):
 #     print(user)
 
 # print(session.execute(select(User).filter(User.id == 1)).one())
 #
 #
 # # Another way to select a user with id = 1
-# for user in session.query(User).filter_by(id=1):
+# for user in session.query(User).filter_by(name="Adam"):
 #     print(user)
-
+#
 # print(session.execute(select(User).filter_by(id=1)).one())
 
 ## JOIN ##
@@ -90,7 +94,7 @@ session = Session(engine)
 # print(
 #     session.execute(select(User.name, Address.email_address).join_from(User, Address)).all()
 # )
-#
+
 # # JOIN, PODAJEMY TABELĘ KTÓRA MA ZOSTAĆ DOŁĄCZONA, A TA DO KTÓREJ MA BYĆ DOŁĄCZENIE JEST WYWNIOSKOWANE PRZEZ BIBLIOTEKĘ
 # print(
 #     session.execute(select(User.name, Address.email_address).join(Address)).all()
@@ -109,9 +113,10 @@ session = Session(engine)
 # # FUNKCJA ZLICZA ILOŚĆ USERÓW DLA DANEGO USERA
 # for row in session.execute(select(User.name, func.count(User.id)).group_by(User)).all():
 #     print(row)
+# print(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.id))
+for row in session.execute(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.id)):
+    print(row)
 
-# for row in session.execute(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.all():
-#     print(row)
 
 
 # LABELE, ALIASY
@@ -136,14 +141,14 @@ session = Session(engine)
 #     join_from(user_alias_1, user_alias_2, user_alias_1.id > user_alias_2.id)).all()
 # )
 #
-address_alias_1 = aliased(Address)
-address_alias_2 = aliased(Address)
-stmt = (
-    select(User).
-    join_from(User, address_alias_1).
-    where(address_alias_1.email_address == 'sergio@yahoo.com').
-    join_from(User, address_alias_2).
-    where(address_alias_2.email_address == 'sergio@gmail.com')
-)
-
-print(session.execute(stmt).all())
+# address_alias_1 = aliased(Address)
+# address_alias_2 = aliased(Address)
+# stmt = (
+#     select(User).
+#     join_from(User, address_alias_1).
+#     where(address_alias_1.email_address == 'sergio@yahoo.com').
+#     join_from(User, address_alias_2).
+#     where(address_alias_2.email_address == 'sergio@gmail.com')
+# )
+#
+# print(session.execute(stmt).all())

@@ -26,6 +26,6 @@ addresses = Table(
 )
 
 # print(dir(addresses))
-# print(addresses.c.keys())
+print(addresses.c.keys())
 
 metadata_obj.create_all(engine)
