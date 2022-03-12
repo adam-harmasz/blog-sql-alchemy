@@ -79,11 +79,34 @@ Base.metadata.create_all(engine)
 author1 = Author(name="Adam", last_name="Mickiewicz")
 post1 = BlogPost(headline="This is headline", body="My first post!", author=author1)
 keyword = Keyword(keyword="Earth")
+keyword2 = Keyword(keyword="Some keyword")
 keyword.posts.append(post1)
+post1.keywords.append(keyword2)
+
 
 with Session(engine) as session:
     session.add_all([post1, keyword, author1])
     session.commit()
-    print(post1.keywords)
     print(keyword.posts)
-    print(post1.author)
+
+
+
+"""
+Comment
+    id Integer PK
+    body Text
+    created_at DateTime
+    author_id Integer FK
+    post_id Integer FK
+    
+
+Reaction
+    id Integer PK
+    type Enum    
+    comment_id Integer FK
+    post_id Integer FK
+    author_id Integer FK
+    
+    
+* Zrobić taki mechanizm po stronie bazy danych, aby nie dało się jednocześnie dać reakcji dla postu i komentarza (constraint)
+"""

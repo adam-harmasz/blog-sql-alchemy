@@ -2,8 +2,8 @@
 ORM DATA MANIPULATION
 """
 
-from sqlalchemy import Column, Integer, String, ForeignKey, select, func, create_engine
-from sqlalchemy.orm import relationship, Session, declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey, select, func, create_engine, desc
+from sqlalchemy.orm import relationship, Session, declarative_base, aliased
 
 engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 
@@ -20,7 +20,7 @@ class User(Base):
     addresses = relationship("Address", back_populates="user")
 
     def __repr__(self):
-       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.name!r} {self.last_name!r})"
+       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.name!r} {self.addresses!r})"
 
 
 class Address(Base):
@@ -39,7 +39,7 @@ class Address(Base):
 Base.metadata.create_all(engine)
 
 adam = User(name="Adam", last_name="Driver", addresses=[Address(email_address="abc@gmail.com")])
-david = User(name="David", last_name="Fincher", addresses=[])
+david = User(name="David", last_name="Fincher", addresses=[Address(email_address="sergio@gmail.com"), Address(email_address="sergio@yahoo.com")])
 sergio = User(name="Sergio", last_name="Leone", addresses=[Address(email_address="sergio@gmail.com"), Address(email_address="sergio@yahoo.com")])
 robert = User(name="Robert", last_name="De Niro", addresses=[Address(email_address="robert@gmail.com")])
 
@@ -114,18 +114,20 @@ print("###")
 # for row in session.execute(select(User.name, func.count(User.id)).group_by(User)).all():
 #     print(row)
 # print(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.id))
-for row in session.execute(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.id)):
-    print(row)
+# for row in session.execute(select(User.name, func.count(Address.user_id)).join(Address).group_by(User.id)):
+#     print(row)
 
 
 
 # LABELE, ALIASY
 # stmt = select(
-#         Address.user_id,
-#         func.count(Address.id).label('num_addresses')).\
-#         group_by("user_id").order_by(desc("num_addresses"))
+#         Address.email_address,
+#         func.count(Address.id).label('num_addresses')).group_by("user_id").order_by(desc("num_addresses"))
+# print(stmt)
+
 # print(session.execute(stmt).all())
-#
+
+
 # # # Przykład użycia aliasów
 # user_alias_1 = User.__table__.alias()
 # user_alias_2 = User.__table__.alias()
@@ -136,9 +138,10 @@ for row in session.execute(select(User.name, func.count(Address.user_id)).join(A
 
 # user_alias_1 = aliased(User)
 # user_alias_2 = aliased(User)
+# # print(select(user_alias_1.id, user_alias_2.id))
 # print(
 #     session.execute(select(user_alias_1.id, user_alias_2.id).
-#     join_from(user_alias_1, user_alias_2, user_alias_1.id > user_alias_2.id)).all()
+#     join_from(user_alias_1, user_alias_2, user_alias_1.id <= user_alias_2.id)).all()
 # )
 #
 # address_alias_1 = aliased(Address)
