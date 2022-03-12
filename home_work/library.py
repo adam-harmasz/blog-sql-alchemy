@@ -15,7 +15,7 @@ from sqlalchemy import (
     select,
     Enum,
     func,
-    Date,
+    Date, exists,
 )
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session, declarative_base
@@ -202,4 +202,36 @@ def list_books() -> None:
             print(book)
 
 
-list_books()
+def list_authors() -> None:
+    with Session(engine) as session:
+        authors = session.execute(select(Book)).scalars().all()
+        for author in authors:
+            print(author)
+
+
+def list_users() -> None:
+    with Session(engine) as session:
+        users = session.execute(select(User)).scalars().all()
+        for user in users:
+            print(user)
+
+
+def borrow_book(book_id: int, user_id: int) -> None:
+    with Session(engine) as session:
+        session.add(
+            Borrow(book_id=book_id, user_id=user_id)
+        )
+        session.commit()
+
+
+def list_borrowed_books():
+    with Session(engine) as session:
+        books = session.execute(select(Book, func.count(Borrow.id)).join(Borrow).group_by(Book.id)).all()
+        for book, count in books:
+            print(f"title: {book.title}, currently borrowed copies: {count}")
+
+
+borrow_book(1, 1)
+borrow_book(2, 2)
+borrow_book(2, 2)
+list_borrowed_books()
