@@ -21,10 +21,17 @@ from sqlalchemy import create_engine, text
 engine = create_engine("sqlite+pysqlite:///:memory:", echo=False, future=True)
 
 with engine.connect() as conn:
-    conn.execute(text("CREATE TABLE Users(id integer primary key autoincrement, name varchar, last_name varchar)"))
+    conn.execute(
+        text(
+            "CREATE TABLE Users(id integer primary key autoincrement, name varchar, last_name varchar)"
+        )
+    )
     conn.execute(
         text("INSERT INTO Users (name, last_name) VALUES (:name, :last_name)"),
-        [{"name": "David", "last_name": "Fincher"}, {"name": "David", "last_name": "Lynch"}]
+        [
+            {"name": "David", "last_name": "Fincher"},
+            {"name": "David", "last_name": "Lynch"},
+        ],
     )
     #
     conn.commit()  # Tutaj commitujemy zmiany do bazy danych

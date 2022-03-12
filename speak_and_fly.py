@@ -46,7 +46,7 @@ with engine.begin() as conn:
     conn.execute(text(courses))
     conn.execute(
         text("INSERT INTO levels (name) VALUES (:name)"),
-        [{"name": "A1"}, {"name": "B2"}]
+        [{"name": "A1"}, {"name": "B2"}],
     )
 
 

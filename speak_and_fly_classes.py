@@ -4,7 +4,9 @@ from sqlalchemy import (
     String,
     Sequence,
     Float,
-    ForeignKey, create_engine, Date,
+    ForeignKey,
+    create_engine,
+    Date,
 )
 from sqlalchemy.orm import relationship, declarative_base, Session
 

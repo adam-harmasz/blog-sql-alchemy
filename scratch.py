@@ -16,6 +16,3 @@ class ShowRepr:
 x = ShowRepr(some_string="KAWA")
 
 # print(x.my_props)
-
-
-

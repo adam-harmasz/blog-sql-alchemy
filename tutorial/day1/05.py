@@ -12,17 +12,17 @@ metadata_obj = MetaData()
 user_table = Table(
     "user_account",
     metadata_obj,
-    Column('id', Integer, primary_key=True),
-    Column('name', String(30)),
-    Column('fullname', String),
+    Column("id", Integer, primary_key=True),
+    Column("name", String(30)),
+    Column("fullname", String),
 )
 
 addresses = Table(
     "adresses",
     metadata_obj,
-    Column('id', Integer, primary_key=True),
-    Column('email', String(30)),
-    Column('user', String),
+    Column("id", Integer, primary_key=True),
+    Column("email", String(30)),
+    Column("user", String),
 )
 
 # print(dir(addresses))

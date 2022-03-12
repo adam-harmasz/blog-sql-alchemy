@@ -1,4 +1,18 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, text, select, update, bindparam, func, Text
+from sqlalchemy import (
+    Table,
+    Column,
+    Integer,
+    String,
+    MetaData,
+    ForeignKey,
+    insert,
+    text,
+    select,
+    update,
+    bindparam,
+    func,
+    Text,
+)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session, declarative_base
 
@@ -37,9 +51,7 @@ class BlogPost(Base):
         self.author = author
 
     def __repr__(self):
-        return (
-            f"BlogPost(id: {self.id}, headline: {self.headline})"
-        )
+        return f"BlogPost(id: {self.id}, headline: {self.headline})"
 
 
 class Keyword(Base):

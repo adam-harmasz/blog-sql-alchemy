@@ -1,4 +1,16 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, text, select, update, bindparam
+from sqlalchemy import (
+    Table,
+    Column,
+    Integer,
+    String,
+    MetaData,
+    ForeignKey,
+    insert,
+    text,
+    select,
+    update,
+    bindparam,
+)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, Session
 
@@ -10,24 +22,28 @@ Base = mapper_registry.generate_base()
 
 
 class User(Base):
-    __tablename__ = 'user_account'
+    __tablename__ = "user_account"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(30))
     last_name = Column(String)
 
-    addresses = relationship("Address", back_populates="user", cascade="all, delete-orphan")
+    addresses = relationship(
+        "Address", back_populates="user", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
-       return f"User(id={self.id}, name={self.name}, fullname={self.name} {self.last_name})"
+        return f"User(id={self.id}, name={self.name}, fullname={self.name} {self.last_name})"
 
 
 class Address(Base):
-    __tablename__ = 'address'
+    __tablename__ = "address"
 
     id = Column(Integer, primary_key=True)
     email_address = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('user_account.id'))  # Tutaj definiujemy relację z tabelą user_account
+    user_id = Column(
+        Integer, ForeignKey("user_account.id")
+    )  # Tutaj definiujemy relację z tabelą user_account
 
     user = relationship("User", back_populates="addresses")
 
@@ -44,10 +60,15 @@ with engine.connect() as conn:
     conn.execute(stmt)
     conn.execute(
         insert(User),
-        [{"name": "David", "last_name": "Fincher"}, {"name": "David", "last_name": "Lynch"}],
+        [
+            {"name": "David", "last_name": "Fincher"},
+            {"name": "David", "last_name": "Lynch"},
+        ],
     )
     select_stmt = select(User.__table__.c.id, User.__table__.c.name + "@aol.com")
-    insert_stmt = insert(Address.__table__).from_select(["user_id", "email_address"], select_stmt)
+    insert_stmt = insert(Address.__table__).from_select(
+        ["user_id", "email_address"], select_stmt
+    )
 
     conn.execute(insert_stmt)
     conn.commit()

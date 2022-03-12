@@ -8,14 +8,14 @@ Base = mapper_registry.generate_base()
 
 
 class Courses(Base):
-    __tablename__ = 'Courses'
+    __tablename__ = "Courses"
 
     id = Column(Integer, primary_key=True)
     lessons = Column(String)
     description = Column(String)
-    language_id = Column(Integer, ForeignKey('Languages.id'))
-    category_id = Column(Integer, ForeignKey('Categories.id'))
-    level_id = Column(Integer, ForeignKey('Levels.id'))
+    language_id = Column(Integer, ForeignKey("Languages.id"))
+    category_id = Column(Integer, ForeignKey("Categories.id"))
+    level_id = Column(Integer, ForeignKey("Levels.id"))
     start_date = Column(String)
     end_date = Column(String)
     price = Column(Integer)
@@ -25,12 +25,14 @@ class Courses(Base):
     Categories = relationship("Categories", back_populates="courses")
 
     def __repr__(self):
-        return f"User(id={self.id!r}, lessons={self.lessons!r}, description={self.description!r}," \
-               f"start_date={self.start_date!r}, end_date={self.end_date!r}, price={self.pricen!r})"
+        return (
+            f"User(id={self.id!r}, lessons={self.lessons!r}, description={self.description!r},"
+            f"start_date={self.start_date!r}, end_date={self.end_date!r}, price={self.pricen!r})"
+        )
 
 
 class Levels(Base):
-    __tablename__ = 'Levels'
+    __tablename__ = "Levels"
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -43,7 +45,7 @@ class Levels(Base):
 
 
 class Languages(Base):
-    __tablename__ = 'Languages'
+    __tablename__ = "Languages"
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -55,7 +57,7 @@ class Languages(Base):
 
 
 class Categories(Base):
-    __tablename__ = 'Categories'
+    __tablename__ = "Categories"
 
     id = Column(Integer, primary_key=True)
     name = Column(String)

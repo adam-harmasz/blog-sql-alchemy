@@ -10,9 +10,32 @@ i pobierze obiekty z relacji
 NO LOADING - Technika która zapewnia brak zapytań o obiekty z relacji
 """
 
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, text, select, update, bindparam, func, desc
+from sqlalchemy import (
+    Table,
+    Column,
+    Integer,
+    String,
+    MetaData,
+    ForeignKey,
+    insert,
+    text,
+    select,
+    update,
+    bindparam,
+    func,
+    desc,
+)
 from sqlalchemy import create_engine
-from sqlalchemy.orm import registry, relationship, Session, declarative_base, aliased, joinedload, selectinload, contains_eager
+from sqlalchemy.orm import (
+    registry,
+    relationship,
+    Session,
+    declarative_base,
+    aliased,
+    joinedload,
+    selectinload,
+    contains_eager,
+)
 
 engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
 
@@ -20,7 +43,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = 'user_account'
+    __tablename__ = "user_account"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(30))
@@ -29,15 +52,17 @@ class User(Base):
     addresses = relationship("Address", back_populates="user")
 
     def __repr__(self):
-       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.name!r} {self.last_name!r})"
+        return f"User(id={self.id!r}, name={self.name!r}, fullname={self.name!r} {self.last_name!r})"
 
 
 class Address(Base):
-    __tablename__ = 'address'
+    __tablename__ = "address"
 
     id = Column(Integer, primary_key=True)
     email_address = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('user_account.id'))  # Tutaj definiujemy relację z tabelą user_account
+    user_id = Column(
+        Integer, ForeignKey("user_account.id")
+    )  # Tutaj definiujemy relację z tabelą user_account
 
     user = relationship("User", back_populates="addresses")
 
@@ -47,10 +72,23 @@ class Address(Base):
 
 Base.metadata.create_all(engine)
 
-adam = User(name="Adam", last_name="Driver", addresses=[Address(email_address="abc@gmail.com")])
+adam = User(
+    name="Adam", last_name="Driver", addresses=[Address(email_address="abc@gmail.com")]
+)
 david = User(name="David", last_name="Fincher", addresses=[])
-sergio = User(name="Sergio", last_name="Leone", addresses=[Address(email_address="sergio@gmail.com"), Address(email_address="sergio@yahoo.com")])
-robert = User(name="Robert", last_name="De Niro", addresses=[Address(email_address="robert@gmail.com")])
+sergio = User(
+    name="Sergio",
+    last_name="Leone",
+    addresses=[
+        Address(email_address="sergio@gmail.com"),
+        Address(email_address="sergio@yahoo.com"),
+    ],
+)
+robert = User(
+    name="Robert",
+    last_name="De Niro",
+    addresses=[Address(email_address="robert@gmail.com")],
+)
 
 
 def populate_db(users: list[User]) -> None:

@@ -12,7 +12,16 @@ Zadania ORM:
 ich odpowiednikami w wierszach tabel
 """
 
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, insert, select
+from sqlalchemy import (
+    Table,
+    Column,
+    Integer,
+    String,
+    MetaData,
+    ForeignKey,
+    insert,
+    select,
+)
 from sqlalchemy import create_engine
 from sqlalchemy.orm import registry, relationship, declarative_base
 
@@ -24,7 +33,7 @@ Base = declarative_base()  # to jest równoważne do tworzenia Base z mapper_reg
 
 
 class User(Base):
-    __tablename__ = 'user_account'
+    __tablename__ = "user_account"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(30))
@@ -33,15 +42,17 @@ class User(Base):
     addresses = relationship("Address", back_populates="user")
 
     def __repr__(self):
-       return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
+        return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
 
 
 class Address(Base):
-    __tablename__ = 'address'
+    __tablename__ = "address"
 
     id = Column(Integer, primary_key=True)
     email_address = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('user_account.id'))  # Tutaj definiujemy relację z tabelą user_account
+    user_id = Column(
+        Integer, ForeignKey("user_account.id")
+    )  # Tutaj definiujemy relację z tabelą user_account
 
     user = relationship(User, back_populates="addresses")
 
@@ -55,17 +66,19 @@ Base.metadata.create_all(engine)
 with engine.connect() as conn:
     conn.execute(
         insert(User),
-        [{"name": "David", "fullname": "Fincher"}, {"name": "David", "fullname": "Lynch"}],
+        [
+            {"name": "David", "fullname": "Fincher"},
+            {"name": "David", "fullname": "Lynch"},
+        ],
     )
     conn.execute(insert(Address).values(email_address="asd@asd.pl", user_id=1))
     conn.execute(insert(Address).values(email_address="email@email.pl", user_id=1))
     conn.commit()
 
-    result = conn.execute(select(User).where(User.id==1)).one()
+    result = conn.execute(select(User).where(User.id == 1)).one()
     # for user in result:
     #     print(user)
     print(result)
-
 
 
 # print(User.__table__)

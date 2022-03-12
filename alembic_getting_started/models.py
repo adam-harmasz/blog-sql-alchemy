@@ -4,11 +4,15 @@ from sqlalchemy import (
     String,
     ForeignKey,
     Table,
-    CheckConstraint, create_engine, Enum,
+    CheckConstraint,
+    create_engine,
+    Enum,
 )
 from sqlalchemy.orm import relationship, declarative_base
 
-engine = create_engine("sqlite+pysqlite:///alembic_getting_started", echo=True, future=True)
+engine = create_engine(
+    "sqlite+pysqlite:///alembic_getting_started", echo=True, future=True
+)
 Base = declarative_base(engine)
 
 # association table
@@ -98,7 +102,7 @@ class Comment(Base):
 
 
 class Reaction(Base):
-    """This is 'like' same as it is in facebook but I didn't want to mix it with SQL keyword 'like' """
+    """This is 'like' same as it is in facebook but I didn't want to mix it with SQL keyword 'like'"""
 
     __tablename__ = "reactions"
     __table_args__ = (
